@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connexion — JusticeFacile</title>
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+
+<div class="auth-root">
+
+  <!-- ── PANNEAU GAUCHE DÉCORATIF ── -->
+  <div class="auth-left">
+    <div class="auth-left-scale">⚖️</div>
+    <div class="auth-left-title">
+      Justice<span>Facile</span>
+    </div>
+    <div class="auth-left-sub">
+      « La justice est la première vertu des institutions sociales,
+      comme la vérité est celle des systèmes de pensée. »
+    </div>
+    <div class="auth-left-stats">
+      <div class="auth-left-stat">
+        <div class="als-val">1 247</div>
+        <div class="als-lbl">Citoyens aidés</div>
+      </div>
+      <div class="auth-left-stat">
+        <div class="als-val">58</div>
+        <div class="als-lbl">Juristes</div>
+      </div>
+      <div class="auth-left-stat">
+        <div class="als-val">94%</div>
+        <div class="als-lbl">Satisfaction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANNEAU DROIT FORMULAIRE ── -->
+  <div class="auth-right">
+
+    <div class="auth-logo-wrap">
+      <img src="{% static 'img/logo.png' %}" alt="JusticeFacile"/>
+      <div class="auth-brand-name">JusticeFacile</div>
+      <div class="auth-brand-sub">Plateforme d'Assistance Juridique du Cameroun 🇨🇲</div>
+    </div>
+
+    <div style="width:100%;max-width:380px">
+
+      <div class="auth-form-title">Connexion</div>
+      <div class="auth-form-sub">Accédez à votre espace sécurisé</div>
+
+      <!-- Messages d'erreur Django -->
+      {% if form.errors %}
+        <div class="alert-securite" style="background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.25);color:#991B1B;margin-bottom:18px">
+          ❌ Identifiants incorrects. Veuillez réessayer.
+        </div>
+      {% endif %}
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert-securite" style="margin-bottom:18px">
+            ℹ️ {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <input type="hidden" name="next" value="{{ next }}"/>
+
+        <div class="form-group">
+          <label class="form-label">Adresse e-mail</label>
+          <input
+            class="form-input"
+            type="email"
+            name="username"
+            placeholder="votre@email.com"
+            value="{{ form.username.value|default:'' }}"
+            autocomplete="email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input
+            class="form-input"
+            type="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--texte-s);cursor:pointer">
+            <input type="checkbox" name="remember" style="accent-color:var(--or);width:14px;height:14px"/>
+            Se souvenir de moi
+          </label>
+          <a href="{% url 'password_reset' %}" class="auth-lien" style="font-size:12.5px">
+            Mot de passe oublié ?
+          </a>
+        </div>
+
+        <button type="submit" class="btn-auth">
+          Se connecter →
+        </button>
+
+      </form>
+
+      <div class="auth-sep"><span>ou</span></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px">
+        <button style="padding:11px;border:1.5px solid var(--bord);border-radius:var(--r-sm);background:#fff;cursor:pointer;font-size:12.5px;font-family:'Lato',sans-serif;font-weight:700;color:var(--nuit);transition:all .2s" onmouseover="this.style.borderColor='var(--or)'" onmouseout="this.style.borderColor='var(--bord)'">
+          🇨🇲 E-Gov Cameroun
+        </button>
+        <button style="padding:11px;border:1.5px solid var(--bord);border-radius:var(--r-sm);background:#fff;cursor:pointer;font-size:12.5px;font-family:'Lato',sans-serif;font-weight:700;color:var(--nuit);transition:all .2s" onmouseover="this.style.borderColor='var(--or)'" onmouseout="this.style.borderColor='var(--bord)'">
+          Google
+        </button>
+      </div>
+
+      <div class="auth-switch">
+        Pas encore de compte ?
+        <a href="{% url 'register' %}" class="auth-lien">Créer un compte</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

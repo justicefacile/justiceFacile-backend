@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inscription — JusticeFacile</title>
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+
+<div class="auth-root">
+
+  <!-- ── PANNEAU GAUCHE ── -->
+  <div class="auth-left">
+    <div class="auth-left-scale"></div>
+    <div class="auth-left-title">
+      Rejoignez<br/><span>JusticeFacile</span>
+    </div>
+    <div class="auth-left-sub">
+      La justice appartient à tous. Créez votre compte
+      et accédez gratuitement à une assistance juridique
+      adaptée à vos besoins, où que vous soyez au Cameroun.
+    </div>
+    <div class="auth-left-stats">
+      <div class="auth-left-stat">
+        <div class="als-val">Gratuit</div>
+        <div class="als-lbl">Pour les victimes</div>
+      </div>
+      <div class="auth-left-stat">
+        <div class="als-val">100%</div>
+        <div class="als-lbl">Confidentiel</div>
+      </div>
+      <div class="auth-left-stat">
+        <div class="als-val">24/7</div>
+        <div class="als-lbl">Disponible</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANNEAU DROIT ── -->
+  <div class="auth-right" style="padding:36px 44px">
+
+    <div class="auth-logo-wrap" style="margin-bottom:22px">
+      <img src="{% static 'img/logo.png' %}" alt="JusticeFacile" style="height:60px"/>
+      <div class="auth-brand-name">Créer un compte</div>
+      <div class="auth-brand-sub">C'est gratuit et confidentiel</div>
+    </div>
+
+    <div style="width:100%;max-width:420px">
+
+      <div class="alert-securite">
+        🛡️ Si vous êtes victime de violence, vous pouvez vous inscrire
+        anonymement. Toutes vos données sont protégées et chiffrées (AES-256).
+      </div>
+
+      {% if form.errors %}
+        <div class="alert-securite" style="background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.25);color:#991B1B;margin-bottom:16px">
+          ❌ Veuillez corriger les erreurs dans le formulaire.
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label class="form-label">Je suis</label>
+          <select class="form-select" name="role">
+            <option value="citoyen">Citoyen(ne) — Je cherche de l'aide juridique</option>
+            <option value="victime_vbg">Victime VBG — J'ai besoin de soutien urgent</option>
+            <option value="juriste">Juriste / Avocat — Je veux offrir mes services</option>
+            <option value="psychologue">Psychologue — Je veux soutenir les victimes</option>
+            <option value="ong">ONG / Organisation — Partenariat institutionnel</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Prénom</label>
+            <input class="form-input" type="text" name="first_name"
+              placeholder="Votre prénom"
+              value="{{ form.first_name.value|default:'' }}"
+              required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input class="form-input" type="text" name="last_name"
+              placeholder="Votre nom"
+              value="{{ form.last_name.value|default:'' }}"
+              required/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Adresse e-mail</label>
+          <input class="form-input" type="email" name="email"
+            placeholder="votre@email.com"
+            value="{{ form.email.value|default:'' }}"
+            autocomplete="email"
+            required/>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Téléphone</label>
+            <input class="form-input" type="tel" name="telephone"
+              placeholder="+237 6XX XXX XXX"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Région</label>
+            <select class="form-select" name="region">
+              <option value="centre">Centre (Yaoundé)</option>
+              <option value="littoral">Littoral (Douala)</option>
+              <option value="ouest">Ouest (Bafoussam)</option>
+              <option value="nord">Nord (Garoua)</option>
+              <option value="extreme_nord">Extrême-Nord</option>
+              <option value="adamaoua">Adamaoua</option>
+              <option value="est">Est</option>
+              <option value="nord_ouest">Nord-Ouest</option>
+              <option value="sud">Sud</option>
+              <option value="sud_ouest">Sud-Ouest</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <input class="form-input" type="password" name="password1"
+              placeholder="••••••••"
+              autocomplete="new-password"
+              required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirmer</label>
+            <input class="form-input" type="password" name="password2"
+              placeholder="••••••••"
+              autocomplete="new-password"
+              required/>
+          </div>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--texte-s);cursor:pointer;line-height:1.6">
+            <input type="checkbox" name="cgv" style="margin-top:3px;accent-color:var(--or);flex-shrink:0" required/>
+            J'accepte les
+            <a href="#" class="auth-lien" style="margin:0 2px">conditions d'utilisation</a>
+            et la
+            <a href="#" class="auth-lien" style="margin:0 2px">politique de confidentialité</a>
+            de JusticeFacile.
+          </label>
+        </div>
+
+        <button type="submit" class="btn-auth">
+          Créer mon compte →
+        </button>
+
+      </form>
+
+      <div class="auth-switch">
+        Déjà inscrit ?
+        <a href="{% url 'login' %}" class="auth-lien">Se connecter</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

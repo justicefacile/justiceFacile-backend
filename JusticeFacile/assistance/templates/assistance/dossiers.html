@@ -1,0 +1,57 @@
+<!-- ════════════════════════════════════
+     dossiers.html
+════════════════════════════════════ -->
+{% extends 'assistance/base.html' %}{% load static %}
+{% block title %}Dossiers{% endblock %}
+{% block breadcrumb %}Dossiers{% endblock %}
+{% block nav_dossiers %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="page-title">Gestion des Dossiers</div>
+    <div class="page-subtitle">{{ stats.dossiers_actifs|default:"342" }} dossiers actifs · {{ stats.cas_urgents|default:"14" }} urgents</div>
+  </div>
+  <div class="page-actions">
+    <select class="form-select" style="width:160px;padding:9px 14px;font-size:13px">
+      <option>Tous les statuts</option><option>Urgent</option><option>En cours</option><option>Résolu</option>
+    </select>
+    <select class="form-select" style="width:140px;padding:9px 14px;font-size:13px">
+      <option>Tous les types</option><option>VBG</option><option>Civil</option><option>Foncier</option>
+    </select>
+    <a class="btn btn-or" href="{% url 'dossier' %}">+ Nouveau dossier</a>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">📋 Liste des dossiers</div>
+    <span style="font-size:12px;color:var(--texte-s)">Page 1 / 29</span>
+  </div>
+  <div class="card-body" style="padding:0">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Citoyen</th><th>Type</th><th>Région</th><th>Statut</th><th>Juriste</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for d in dossiers %}
+          <tr>
+            <td class="td-id">#JF-{{ d.id }}</td>
+            <td>{{ d.prenom }} {{ d.nom }}</td>
+            <td><span class="badge {% if d.type == 'vbg' %}b-vbg{% elif d.type == 'foncier' %}b-foncier{% else %}b-civil{% endif %}">{{ d.get_type_display }}</span></td>
+            <td>{{ d.region }}</td>
+            <td><span class="badge {% if d.statut == 'urgent' %}b-urgent{% elif d.statut == 'en_cours' %}b-encours{% else %}b-resolu{% endif %}">{{ d.get_statut_display }}</span></td>
+            <td>{{ d.juriste|default:"Non assigné" }}</td>
+            <td>{{ d.date_creation|date:"d/m/Y" }}</td>
+            <td><a class="btn btn-nuit btn-xs" href="{% url 'dossier' d.id %}">Ouvrir</a></td>
+          </tr>
+          {% empty %}
+          <tr><td class="td-id">#JF-001</td><td>Aïcha Mbarga</td><td><span class="badge b-vbg">VBG</span></td><td>Centre</td><td><span class="badge b-urgent">🔴 Urgent</span></td><td>Me. Fotso</td><td>01/05/2026</td><td><a class="btn btn-nuit btn-xs" href="#">Ouvrir</a></td></tr>
+          <tr><td class="td-id">#JF-002</td><td>Paul Nkemeni</td><td><span class="badge b-foncier">Foncier</span></td><td>Littoral</td><td><span class="badge b-encours">🟡 En cours</span></td><td>Me. Ateba</td><td>29/04/2026</td><td><a class="btn btn-outline btn-xs" href="#">Ouvrir</a></td></tr>
+          <tr><td class="td-id">#JF-003</td><td>Marie Tchamba</td><td><span class="badge b-vbg">VBG</span></td><td>Ouest</td><td><span class="badge b-resolu">✅ Résolu</span></td><td>Me. Ngo</td><td>27/04/2026</td><td><a class="btn btn-outline btn-xs" href="#">Ouvrir</a></td></tr>
+          <tr><td class="td-id">#JF-004</td><td>Jean Kouam</td><td><span class="badge b-civil">Civil</span></td><td>Nord</td><td><span class="badge b-encours">🟡 En cours</span></td><td>Me. Bello</td><td>25/04/2026</td><td><a class="btn btn-outline btn-xs" href="#">Ouvrir</a></td></tr>
+          <tr><td class="td-id">#JF-005</td><td>Fatima Adamou</td><td><span class="badge b-vbg">VBG</span></td><td>Extrême-Nord</td><td><span class="badge b-urgent">🔴 Urgent</span></td><td style="color:#DC2626;font-weight:700">Non assigné</td><td>03/05/2026</td><td><a class="btn btn-danger btn-xs" href="#">Urgent</a></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

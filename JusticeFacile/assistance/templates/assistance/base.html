@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}JusticeFacile{% endblock %} — Plateforme d'Assistance Juridique</title>
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <div class="ornement">⚖</div>
+
+  <!-- ════ MESSAGES FLASH DJANGO ════ -->
+  {% if messages %}
+    <div style="position:fixed;top:16px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px">
+      {% for message in messages %}
+        <div class="django-alert" style="
+          background:{% if message.tags == 'error' %}#FEE2E2{% elif message.tags == 'success' %}#DCFCE7{% else %}var(--or-pale){% endif %};
+          border:1px solid {% if message.tags == 'error' %}#FCA5A5{% elif message.tags == 'success' %}#86EFAC{% else %}rgba(201,146,10,.30){% endif %};
+          color:{% if message.tags == 'error' %}#991B1B{% elif message.tags == 'success' %}#14532D{% else %}#7A5300{% endif %};
+          padding:12px 18px;border-radius:10px;
+          font-size:13px;font-weight:600;
+          box-shadow:var(--shadow);
+          transition:opacity .4s,transform .4s;
+          max-width:320px;
+        ">
+          {% if message.tags == 'error' %}❌{% elif message.tags == 'success' %}✅{% else %}ℹ️{% endif %}
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- ════ LAYOUT APPLICATION ════ -->
+  <div class="app-layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-logo">
+        <img src="{% static 'img/logo.png' %}" alt="JusticeFacile Logo"/>
+        <div>
+          <div class="sidebar-logo-text">Justice<span>Facile</span></div>
+          <div class="sidebar-logo-sub">Cameroun · 🇨🇲</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <div class="nav-section-lbl">Principal</div>
+        <a class="nav-item {% block nav_dashboard %}{% endblock %}" href="{% url 'dashboard' %}">
+          <span class="nav-icon">🏠</span> Tableau de bord
+        </a>
+        <a class="nav-item {% block nav_dossiers %}{% endblock %}" href="{% url 'dossier' %}">
+          <span class="nav-icon">📋</span> Dossiers
+          <span class="nav-badge">12</span>
+        </a>
+        <a class="nav-item {% block nav_citoyens %}{% endblock %}">
+          <span class="nav-icon">👥</span> Citoyens
+        </a>
+        <a class="nav-item {% block nav_juristes %}{% endblock %}">
+          <span class="nav-icon">⚖️</span> Juristes certifiés
+        </a>
+
+        <div class="nav-section-lbl">VBG & Soutien</div>
+        <a class="nav-item {% block nav_vbg %}{% endblock %}">
+          <span class="nav-icon">🛡️</span> Victimes VBG
+          <span class="nav-badge">5</span>
+        </a>
+        <a class="nav-item {% block nav_consultations %}{% endblock %}">
+          <span class="nav-icon">💬</span> Consultations
+        </a>
+        <a class="nav-item {% block nav_ia %}{% endblock %}">
+          <span class="nav-icon">🤖</span> Agent IA
+        </a>
+        <a class="nav-item {% block nav_lois %}{% endblock %}" >
+          <span class="nav-icon">📚</span> Textes de loi
+        </a>
+
+        <div class="nav-section-lbl">Administration</div>
+        <a class="nav-item {% block nav_rapports %}{% endblock %}">
+          <span class="nav-icon">📊</span> Rapports
+        </a>
+        <a class="nav-item {% block nav_parametres %}{% endblock %}">
+          <span class="nav-icon">⚙️</span> Paramètres
+        </a>
+        <a class="nav-item {% block nav_profil %}{% endblock %}">
+          <span class="nav-icon">👤</span> Mon profil
+        </a>
+
+        <div class="nav-section-lbl">Compte</div>
+        <a class="nav-item danger" >
+          <span class="nav-icon">🚪</span> Déconnexion
+        </a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <a class="sidebar-user">
+          <div class="sidebar-avatar">
+           
+          </div>
+          <div class="sidebar-user-info">
+
+          </div>
+        </a>
+      </div>
+
+    </aside>
+    <!-- /sidebar -->
+
+    <!-- ── MAIN WRAP ── -->
+    <div class="main-wrap">
+
+      <!-- ── TOPBAR ── -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+          <div class="breadcrumb">
+            <span class="bc-home">JusticeFacile</span>
+            <span class="bc-sep">›</span>
+            <span class="bc-current">{% block breadcrumb %}Accueil{% endblock %}</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Rechercher un dossier..."/>
+          </div>
+
+          <!-- Bouton notifs -->
+          <div class="icon-btn notif-trigger" onclick="toggleNotif()">
+            🔔<span class="notif-dot"></span>
+          </div>
+
+          <a class="icon-btn"  title="Mon profil">👤</a>
+
+          <a class="btn btn-or btn-sm">
+            + Nouveau dossier
+          </a>
+        </div>
+      </header>
+
+      <!-- ── PANEL NOTIFICATIONS ── -->
+      <div class="notif-panel" id="notif-panel">
+        <div class="notif-header">
+          <div class="notif-title">🔔 Notifications</div>
+          <span class="notif-clear">Tout marquer lu</span>
+        </div>
+        <div class="notif-item">
+          <div class="a-dot a-rouge" style="margin-top:4px;flex-shrink:0"></div>
+          <div><div class="notif-text">Nouveau cas VBG urgent — Dossier #JF-2026-005</div><div class="notif-time">Il y a 5 min</div></div>
+        </div>
+        <div class="notif-item">
+          <div class="a-dot a-or" style="margin-top:4px;flex-shrink:0"></div>
+          <div><div class="notif-text">Me. Fotso a répondu au dossier #001</div><div class="notif-time">Il y a 32 min</div></div>
+        </div>
+        <div class="notif-item">
+          <div class="a-dot a-vert" style="margin-top:4px;flex-shrink:0"></div>
+          <div><div class="notif-text">3 nouveaux citoyens inscrits depuis Douala</div><div class="notif-time">Il y a 1h</div></div>
+        </div>
+        <div class="notif-item">
+          <div class="a-dot a-nuit" style="margin-top:4px;flex-shrink:0"></div>
+          <div><div class="notif-text">Agent IA — 24 requêtes traitées automatiquement</div><div class="notif-time">Aujourd'hui</div></div>
+        </div>
+      </div>
+
+      <!-- ── CONTENU DE LA PAGE ── -->
+      <main class="page-content">
+        {% block content %}{% endblock %}
+      </main>
+
+    </div>
+    <!-- /main-wrap -->
+
+  </div>
+  <!-- /app-layout -->
+
+  <!-- ════ MODAL NOUVEAU DOSSIER (global) ════ -->
+  <div class="modal-overlay" id="modal-nouveau-dossier">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">📋 Nouveau Dossier</div>
+        <button class="modal-close" onclick="closeModal('modal-nouveau-dossier')">✕</button>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Type de dossier</label>
+            <select class="form-select" name="type_dossier">
+              <option value="assistance">Citoyen — Assistance juridique générale</option>
+              <option value="vbg">VBG — Violence basée sur le genre (URGENT)</option>
+              <option value="foncier">Foncier — Litige immobilier / terrain</option>
+              <option value="civil">Civil — Affaire civile</option>
+              <option value="travail">Travail — Conflit employeur / employé</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Prénom du citoyen</label>
+              <input class="form-input" type="text" name="prenom" placeholder="Prénom" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom</label>
+              <input class="form-input" type="text" name="nom" placeholder="Nom" required/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Région</label>
+              <select class="form-select" name="region">
+                <option>Centre (Yaoundé)</option>
+                <option>Littoral (Douala)</option>
+                <option>Ouest (Bafoussam)</option>
+                <option>Nord (Garoua)</option>
+                <option>Extrême-Nord</option>
+                <option>Adamaoua</option>
+                <option>Est</option>
+                <option>Nord-Ouest</option>
+                <option>Sud</option>
+                <option>Sud-Ouest</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priorité</label>
+              <select class="form-select" name="priorite">
+                <option value="normal">Normal</option>
+                <option value="urgent">Urgent</option>
+                <option value="tres_urgent">Très urgent — VBG</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description du cas</label>
+            <textarea class="form-textarea" name="description" placeholder="Décrivez brièvement la situation du citoyen..." rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-nouveau-dossier')">Annuler</button>
+          <button type="submit" class="btn btn-or">📋 Créer le dossier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

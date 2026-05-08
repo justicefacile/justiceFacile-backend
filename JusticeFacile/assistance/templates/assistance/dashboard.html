@@ -1,0 +1,210 @@
+{% extends 'assistance/base.html' %}
+{% load static %}
+
+{% block title %}Tableau de bord{% endblock %}
+{% block breadcrumb %}Tableau de bord{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+
+<!-- ── HERO BANNER ── -->
+<div class="hero-banner">
+  <div>
+    <div class="hero-title">Bienvenue, 🇨🇲</div>
+    <div class="hero-sub">
+      JusticeFacile rapproche la justice de chaque citoyen camerounais,
+      avec un dispositif spécial de soutien aux victimes de VBG.
+    </div>
+    <div class="hero-actions">
+      <a class="btn btn-or" href="{% url 'dossier' %}">📋 Nouveau dossier</a>
+      <a class="btn" style="background:rgba(255,255,255,.12);color:var(--ivoire);border:1px solid rgba(201,146,10,.25)">
+        📚 Textes de loi
+      </a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hs-val"></div>
+      <div class="hs-lbl">Citoyens aidés</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hs-val">%</div>
+      <div class="hs-lbl">Satisfaction</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATISTIQUES ── -->
+<div class="grid-4" style="margin-bottom:24px">
+  <div class="stat-card sc-or">
+    <div class="stat-icon">📋</div>
+    <div class="stat-val"></div>
+    <div class="stat-label">Dossiers actifs</div>
+    <div class="stat-trend t-up">↑ +12% ce mois</div>
+  </div>
+  <div class="stat-card sc-nuit">
+    <div class="stat-icon">⚖️</div>
+    <div class="stat-val"></div>
+    <div class="stat-label">Juristes certifiés</div>
+    <div class="stat-trend t-up">↑ 3 nouveaux</div>
+  </div>
+  <div class="stat-card sc-vert">
+    <div class="stat-icon">🛡️</div>
+    <div class="stat-val"></div>
+    <div class="stat-label">Victimes VBG suivies</div>
+    <div class="stat-trend t-up">↑ 8 cette semaine</div>
+  </div>
+  <div class="stat-card sc-rouge">
+    <div class="stat-icon">🚨</div>
+    <div class="stat-val"></div>
+    <div class="stat-label">Cas urgents</div>
+    <div class="stat-trend t-warn">⚠ Attention requise</div>
+  </div>
+</div>
+
+<!-- ── CONTENU PRINCIPAL ── -->
+<div class="grid-main" style="margin-bottom:24px">
+
+  <!-- Tableau dossiers récents -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Dossiers récents</div>
+      <a class="btn btn-outline btn-xs" href="{% url 'dossier' %}">Voir tout →</a>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Citoyen</th><th>Type</th><th>Statut</th><th>Juriste</th><th>Action</th>
+            </tr>
+          </thead>
+          <!--<tbody>
+            {% for dossier in dossiers_recents %}
+            <tr>
+              <td class="td-id">#JF-</td>
+              <td>.</td>
+              <td>
+                <span class="badge">
+                </span>
+              </td>
+              <td>
+                <span class="badge {% if dossier.statut == 'urgent' %}b-urgent{% elif dossier.statut == 'en_cours' %}b-encours{% else %}b-resolu{% endif %}">
+                  {% if dossier.statut == 'urgent' %}🔴{% elif dossier.statut == 'en_cours' %}🟡{% else %}✅{% endif %}
+                  {{ dossier.get_statut_display }}
+                </span>
+              </td>
+              <td>{{ dossier.juriste|default:"Non assigné" }}</td>
+              <td>
+                <a class="btn btn-nuit btn-xs" href="{% url 'detail_dossier' dossier.id %}">Voir</a>
+              </td>
+            </tr>-->
+            {% empty %}
+            <!-- Données de démonstration si aucun dossier -->
+            <tr><td class="td-id">#JF-001</td><td>Aïcha M.</td><td><span class="badge b-vbg">VBG</span></td><td><span class="badge b-urgent">🔴 Urgent</span></td><td>Me. Fotso</td><td><a class="btn btn-nuit btn-xs" href="#">Voir</a></td></tr>
+            <tr><td class="td-id">#JF-002</td><td>Paul N.</td><td><span class="badge b-foncier">Foncier</span></td><td><span class="badge b-encours">🟡 En cours</span></td><td>Me. Ateba</td><td><a class="btn btn-outline btn-xs" href="#">Voir</a></td></tr>
+            <tr><td class="td-id">#JF-003</td><td>Marie T.</td><td><span class="badge b-vbg">VBG</span></td><td><span class="badge b-resolu">✅ Résolu</span></td><td>Me. Ngo</td><td><a class="btn btn-outline btn-xs" href="#">Voir</a></td></tr>
+            <tr><td class="td-id">#JF-004</td><td>Jean K.</td><td><span class="badge b-civil">Civil</span></td><td><span class="badge b-encours">🟡 En cours</span></td><td>Me. Bello</td><td><a class="btn btn-outline btn-xs" href="#">Voir</a></td></tr>
+            <tr><td class="td-id">#JF-005</td><td>Fatima A.</td><td><span class="badge b-vbg">VBG</span></td><td><span class="badge b-urgent">🔴 Urgent</span></td><td style="color:#DC2626;font-weight:700">Non assigné</td><td><a class="btn btn-danger btn-xs" href="#">Urgent</a></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alertes -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">🔔 Alertes</div></div>
+    <div class="card-body" style="padding:12px 22px">
+      <div class="alert-list">
+        <div class="alert-row"><div class="a-dot a-rouge"></div><div><div class="a-text">Nouveau cas VBG urgent — Yaoundé</div><div class="a-time">Il y a 5 min</div></div></div>
+        <div class="alert-row"><div class="a-dot a-or"></div><div><div class="a-text">Me. Fotso demande extension dossier #001</div><div class="a-time">Il y a 32 min</div></div></div>
+        <div class="alert-row"><div class="a-dot a-vert"></div><div><div class="a-text">3 nouveaux citoyens inscrits depuis Douala</div><div class="a-time">Il y a 1h</div></div></div>
+        <div class="alert-row"><div class="a-dot a-nuit"></div><div><div class="a-text">Agent IA — 24 requêtes automatisées</div><div class="a-time">Aujourd'hui</div></div></div>
+        <div class="alert-row"><div class="a-dot a-rouge"></div><div><div class="a-text">Rapport MINPROFF disponible</div><div class="a-time">Hier</div></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── GRILLE BASSE ── -->
+<div class="grid-3">
+
+  <!-- Actions rapides -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">Actions rapides</div></div>
+    <div class="card-body">
+      <div class="quick-grid">
+        <a class="quick-item" href="{% url 'dossier' %}"><div class="quick-icon">📝</div><div class="quick-label">Nouveau dossier</div></a>
+        <a class="quick-item" ><div class="quick-icon">🛡️</div><div class="quick-label">Signaler VBG</div></a>
+        <a class="quick-item" ><div class="quick-icon">⚖️</div><div class="quick-label">Trouver juriste</div></a>
+        <a class="quick-item" ><div class="quick-icon">📚</div><div class="quick-label">Textes de loi</div></a>
+        <a class="quick-item" ><div class="quick-icon">🤖</div><div class="quick-label">Assistant IA</div></a>
+        <a class="quick-item" href="tel:+237"><div class="quick-icon">📞</div><div class="quick-label">Urgence</div></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Régions -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">📍 Par région</div></div>
+    <div class="card-body">
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-name">Centre (Yaoundé)</span><span class="prog-pct">78%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-or" style="width:78%"></div></div>
+      </div>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-name">Littoral (Douala)</span><span class="prog-pct">64%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-nuit" style="width:64%"></div></div>
+      </div>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-name">Ouest (Bafoussam)</span><span class="prog-pct">41%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-or" style="width:41%"></div></div>
+      </div>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-name">Nord (Garoua)</span><span class="prog-pct">28%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-nuit" style="width:28%"></div></div>
+      </div>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-name">Extrême-Nord</span><span class="prog-pct">17%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-rouge" style="width:17%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agent IA -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">🤖 Agent IA — n8n</div></div>
+    <div class="card-body">
+      <div style="background:linear-gradient(135deg,var(--or-pale),#FEF9E5);border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--bord)">
+        <div style="font-size:12px;color:var(--texte-s);margin-bottom:5px">Requêtes traitées aujourd'hui</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;color:var(--or);font-weight:700">
+          247 <span style="font-size:14px;color:var(--texte-s)">/500</span>
+        </div>
+        <div class="prog-bar" style="margin-top:10px"><div class="prog-fill pf-or" style="width:49%"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;font-size:13px">
+          <span style="color:var(--texte-s)">📄 Analyses documents</span>
+          <span style="font-family:'Cinzel',serif;font-weight:700;color:var(--or)">142</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px">
+          <span style="color:var(--texte-s)">💬 Questions juridiques</span>
+          <span style="font-family:'Cinzel',serif;font-weight:700;color:var(--or)">89</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px">
+          <span style="color:var(--texte-s)">🎤 Assistant vocal</span>
+          <span style="font-family:'Cinzel',serif;font-weight:700;color:var(--or)">16</span>
+        </div>
+      </div>
+      <a class="btn btn-or" style="width:100%;margin-top:16px;justify-content:center">
+        Ouvrir l'Agent IA
+      </a>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

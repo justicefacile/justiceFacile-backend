@@ -1,0 +1,72 @@
+{% extends 'assistance/base.html' %}{% load static %}
+{% block title %}Victimes VBG{% endblock %}
+{% block breadcrumb %}Victimes VBG{% endblock %}
+{% block nav_vbg %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="page-title">🛡️ Victimes VBG</div>
+    <div class="page-subtitle">Dispositif spécial de soutien — Confidentiel et sécurisé</div>
+  </div>
+  <div class="page-actions">
+    <a class="btn btn-danger" href="#">🚨 Signalement urgent</a>
+  </div>
+</div>
+
+<div class="vbg-urgence">
+  <div>
+    <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:700;margin-bottom:8px">🚨 Ligne d'urgence VBG</div>
+    <div style="font-size:13px;opacity:.85;max-width:400px;line-height:1.6">En cas de danger immédiat, appelez le numéro d'urgence national. Notre équipe est disponible 24h/24 pour vous aider.</div>
+  </div>
+  <button class="btn-sos">📞 SOS — Appeler maintenant</button>
+</div>
+
+<div class="grid-4" style="margin-bottom:24px">
+  <div class="stat-card sc-rouge"><div class="stat-icon">🚨</div><div class="stat-val">5</div><div class="stat-label">Cas urgents actifs</div><div class="stat-trend t-down">⚠ Intervention requise</div></div>
+  <div class="stat-card sc-nuit"><div class="stat-icon">🛡️</div><div class="stat-val">127</div><div class="stat-label">Victimes suivies</div><div class="stat-trend t-up">↑ +8 cette semaine</div></div>
+  <div class="stat-card sc-vert"><div class="stat-icon">✅</div><div class="stat-val">89</div><div class="stat-label">Cas résolus</div><div class="stat-trend t-up">↑ +12 ce mois</div></div>
+  <div class="stat-card sc-or"><div class="stat-icon">🤝</div><div class="stat-val">14</div><div class="stat-label">ONG partenaires</div><div class="stat-trend t-up">MINPROFF · ONU Femmes</div></div>
+</div>
+
+<div class="grid-2">
+  <div>
+    <div style="font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:var(--nuit);margin-bottom:14px;letter-spacing:.02em">Cas urgents à traiter</div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="victime-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div><div class="vc-name">Aïcha M. — Anonymisée</div><div class="vc-id">#JF-2026-001 · Yaoundé · Centre</div></div>
+          <span class="badge b-urgent">🔴 URGENT</span>
+        </div>
+        <div class="vc-info">Type : Violence conjugale physique et psychologique<br/>Signalé : Il y a 2 heures · Besoin : Juriste + Psychologue</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--bord)">
+          <span style="font-size:11px;font-weight:700;color:#16A34A">🔒 Données chiffrées</span>
+          <div style="display:flex;gap:8px"><a class="btn btn-outline btn-xs" href="#">Dossier</a><a class="btn btn-danger btn-xs" href="#">Intervenir</a></div>
+        </div>
+      </div>
+      <div class="victime-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div><div class="vc-name">Fatima A. — Anonymisée</div><div class="vc-id">#JF-2026-005 · Maroua · Extrême-Nord</div></div>
+          <span class="badge b-urgent">🔴 URGENT</span>
+        </div>
+        <div class="vc-info">Type : Violence sexuelle · Pas de juriste assigné<br/>Signalé : Il y a 5 minutes · Zone rurale — accès difficile</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--bord)">
+          <span style="font-size:11px;font-weight:700;color:#16A34A">🔒 Données chiffrées</span>
+          <div style="display:flex;gap:8px"><a class="btn btn-outline btn-xs" href="#">Dossier</a><a class="btn btn-danger btn-xs" href="#">Intervenir</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">🤝 ONG & Structures partenaires</div></div>
+    <div class="card-body" style="padding:12px 22px">
+      <div class="alert-list">
+        <div class="alert-row"><div class="a-dot a-vert"></div><div><div class="a-text" style="font-weight:700">ONU Femmes Cameroun</div><div class="a-time">📍 Yaoundé · Disponible 24h/24</div></div></div>
+        <div class="alert-row"><div class="a-dot a-nuit"></div><div><div class="a-text" style="font-weight:700">MINPROFF — CPFF</div><div class="a-time">📍 National · Centres d'écoute</div></div></div>
+        <div class="alert-row"><div class="a-dot a-or"></div><div><div class="a-text" style="font-weight:700">UNFPA Cameroun</div><div class="a-time">📍 Yaoundé · Soutien psychosocial</div></div></div>
+        <div class="alert-row"><div class="a-dot a-rouge"></div><div><div class="a-text" style="font-weight:700">Avocats Sans Frontières</div><div class="a-time">📍 Douala · Aide juridique gratuite</div></div></div>
+        <div class="alert-row"><div class="a-dot a-vert"></div><div><div class="a-text" style="font-weight:700">AlertGBV Cameroun</div><div class="a-time">📍 National · Application mobile</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
