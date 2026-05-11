@@ -1,0 +1,8 @@
+<h1>Todo List</h1>
+<ul>
+  {% for todo in todos %}
+  <li>
+    {{ todo.title }} - {% if todo.completed %}Done{% else %}Not Done{% endif %}
+  </li>
+  {% endfor %}
+</ul>
