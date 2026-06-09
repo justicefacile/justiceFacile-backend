@@ -174,3 +174,7 @@ JWT_AUTH_REFRESH_COOKIE = 'justicefacile-refresh'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://justicefacile-backend-production.up.railway.app',
+]
