@@ -11,6 +11,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from .serializers import RegisterSerializer, UserSerializer, TexteLoiSerializer
 from .models import TexteLoi
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
 
 # Create your views here.
 
@@ -113,6 +116,12 @@ class LogoutView(APIView):
         
         except Exception as e:
             return Response({"error": "Token invalide ou déjà déconnecté."}, status=status.HTTP_400_BAD_REQUEST)
+        
+class GoogleLoginView(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+    callback_url = "http://127.0.0.1:8000/"
+
 def inscription(request):
     return render(request, 'assistance/register.html')
 def connexion(request):

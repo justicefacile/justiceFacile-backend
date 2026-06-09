@@ -37,28 +37,40 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'corsheaders',
+    'rest_framework',
     'rest_framework_simplejwt',
-    'assistance',
     'rest_framework_simplejwt.token_blacklist',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'assistance',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'JusticeFacile.urls'
@@ -129,8 +141,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STACTICFILES_DIR = [BASE_DIR/'static'] 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 MEDIA_URL = '/media/'
@@ -138,10 +152,10 @@ MEDIA_URL = '/media/'
 LOGIN_URL = '/login'
 
 
-# Configuration du DRF
+# Configuration du DRF+JWt.
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',  
@@ -150,3 +164,13 @@ REST_FRAMEWORK = {
 
 # Configuration du CORS.
 CORS_ALLOW_ALL_ORIGINS = True
+
+#
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = 'justicefacile-auth'
+JWT_AUTH_REFRESH_COOKIE = 'justicefacile-refresh'
+
+# Configuration optionnelle pour allauth (évite d'avoir besoin d'envoyer des mails de confirmation)
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True

@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from assistance.views import GoogleLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('assistance.urls')),
+    # les routes d'authentification de dj-rest-auth sont mis ici car elles ne font pas partie integrante de mon aplli mais sont directement installéés dans mon projet.
+    path('api/v1/auth/google/', GoogleLoginView.as_view(), name='google_login'),
+    path('api/v1/auth/', include('dj_rest_auth.urls')),
 ]
