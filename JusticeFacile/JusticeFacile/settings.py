@@ -187,4 +187,4 @@ EMAIL_HOST_PASSWORD = "vyomlsrquakcakcf"
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "jjusticefacile@gmail.com"
 SERVER_EMAIL = "jjusticefacile@gmail.com"
-
+EMAIL_TIMEOUT = 30
