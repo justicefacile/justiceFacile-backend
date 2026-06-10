@@ -27,12 +27,20 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny] 
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        
+        data = request.data.copy()
+        
+        if 'role' in data and isinstance(data['role'], str):
+            data['role'] = data['role'].upper()
+        
+        serializer = self.get_serializer(data=data)
+        
         if not serializer.is_valid():
             print("❌ ERREUR VALIDATION INSCRIPTION :", serializer.errors)
+            
         serializer.is_valid(raise_exception=True) 
         user = serializer.save() 
-        
+
         # Désactiver le compte tant que l'email n'est pas vérifié
         user.is_active = False
         user.save()
@@ -41,20 +49,19 @@ class RegisterView(generics.CreateAPIView):
         code_activation = f"{random.randint(100000, 999999)}"
         VerificationEmail.objects.create(user=user, code=code_activation)
 
-        # Envoyer l'email 
         try:
             send_mail(
                 subject="Votre code de vérification - JusticeFacile",
-                message=f"Bonjour,\n\nVotre code de vérification pour valider votre compte JusticeFacile est : {code_activation}.\nCe code expirera dans 15 minutes.",
+                message=f"Bonjour,\n\nVotre code de vérification : {code_activation}.\nIl expire dans 15 minutes.",
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
                 fail_silently=False,
             )
-        except Exception as e:
+        except Exception:
             pass
 
         return Response({
-            'message': 'Compte créé ! Veuillez vérifier votre boîte mail pour obtenir votre code à 6 chiffres.',
+            'message': 'Compte créé ! Veuillez vérifier votre boîte mail.',
             'email': user.email
         }, status=status.HTTP_201_CREATED)
 
