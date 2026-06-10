@@ -28,6 +28,8 @@ class RegisterView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            print("❌ ERREUR VALIDATION INSCRIPTION :", serializer.errors)
         serializer.is_valid(raise_exception=True) 
         user = serializer.save() 
         
