@@ -1,3 +1,4 @@
+import threading 
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.conf import settings
@@ -21,6 +22,17 @@ from dj_rest_auth.registration.views import SocialLoginView
 
 # Create your views here.
 
+ # 
+
+
+
+def envoyer_mail_background(subject, message, from_email, recipient_list):
+    try:
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+        print("📨 [EMAIL] Le mail a été envoyé avec succès par le worker secondaire.")
+    except Exception as e:
+        print(f"⚠️ [EMAIL] Échec de l'envoi (normal sur Railway) : {e}")
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
@@ -38,33 +50,32 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True) 
         user = serializer.save() 
 
+        # Désactiver le compte en attente de vérification
         user.is_active = False
         user.save()
 
         # Générer le code à 6 chiffres
         code_activation = f"{random.randint(100000, 999999)}"
         VerificationEmail.objects.create(user=user, code=code_activation)
-        print(f"  [DEBUG] CODE DE VÉRIFICATION POUR {user.email} -> {code_activation}")
 
-        # On tente l'envoi on n'attend pas 30 secondes
-        try:
-            send_mail(
-                subject="Votre code de vérification - JusticeFacile",
-                message=f"Bonjour,\n\nVotre code : {code_activation}.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=False,
-                # On force un timeout ultra-court ici pour ne pas bloquer Gunicorn
-                auth_user=settings.EMAIL_HOST_USER,
-                auth_password=settings.EMAIL_HOST_PASSWORD,
+        # Affichage immédiat dans les logs pour le débogage
+        print(f"🔑 [DEBUG] CODE DE VÉRIFICATION POUR {user.email} -> {code_activation}")
+
+        # ON LANCE L'ENVOI DANS UN THREAD SÉPARÉ (Ne bloque pas le téléphone)
+        email_thread = threading.Thread(
+            target=envoyer_mail_background,
+            args=(
+                "Votre code de vérification - JusticeFacile",
+                f"Bonjour,\n\nVotre code de vérification est : {code_activation}.",
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email]
             )
-        except Exception as e:
-            # Si le mail échoue, on l'écrit dans les logs mais ON NE CRASHE PAS
-            print(f" Le mail n'a pas pu partir (Hébergeur restrictif), mais le code est généré : {e}")
+        )
+        email_thread.start()
 
-        # L'API répond positivement au téléphone quoi qu'il arrive !
+        # Le serveur répond instantanément au téléphone
         return Response({
-            'message': 'Compte créé ! (Vérifie tes e-mails ou les logs serveur)',
+            'message': 'Compte créé ! Veuillez vérifier vos logs ou votre boîte mail.',
             'email': user.email
         }, status=status.HTTP_201_CREATED)
 
