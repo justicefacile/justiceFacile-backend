@@ -62,7 +62,7 @@ class RegisterView(generics.CreateAPIView):
         # Affichage immédiat dans les logs pour le débogage
         print(f" [DEBUG] CODE DE VÉRIFICATION POUR {user.email} -> {code_activation}")
 
-        # ON LANCE L'ENVOI DANS UN THREAD SÉPARÉ (Ne bloque pas le téléphone)
+        # Envoi de l'e-mail en arrière-plan
         email_thread = threading.Thread(
             target=envoyer_mail_background,
             args=(
@@ -72,19 +72,20 @@ class RegisterView(generics.CreateAPIView):
                 [user.email]
             )
         )
-    
         email_thread.start()
 
-        response_data = serializer.data  # Format plat : {'id', 'username', 'email'}
+        # On utilise le UserSerializer complet
+        user_data = UserSerializer(user).data # Contient id, username, email, etc.
         
-        # On double les données sous forme imbriquée au cas où Flutter cherche 'user'
-        response_data['user'] = serializer.data 
-        
-        # On ajoute les messages et emails requis
-        response_data['message'] = 'Compte créé ! Veuillez vérifier vos logs.'
-        response_data['email'] = user.email
+        response_data = {
+            **user_data, # On met tout à plat
+            'user': user_data,
+            'message': 'Compte créé ! Veuillez vérifier vos logs.',
+            'email': user.email,
+            'tokens': {'access': '', 'refresh': ''}
+        }
 
-        print(" [DEBUG] Réponse envoyée à Flutter :", response_data)
+        print(" [DEBUG] Réponse finale envoyée à Flutter :", response_data)
 
         return Response(response_data, status=status.HTTP_201_CREATED)
 
