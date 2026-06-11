@@ -29,9 +29,9 @@ from dj_rest_auth.registration.views import SocialLoginView
 def envoyer_mail_background(subject, message, from_email, recipient_list):
     try:
         send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-        print("📨 [EMAIL] Le mail a été envoyé avec succès par le worker secondaire.")
+        print(" [EMAIL] Le mail a été envoyé avec succès .")
     except Exception as e:
-        print(f"⚠️ [EMAIL] Échec de l'envoi (normal sur Railway) : {e}")
+        print(f" [EMAIL] Échec de l'envoi (normal sur Railway) : {e}")
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -45,7 +45,8 @@ class RegisterView(generics.CreateAPIView):
         
         serializer = self.get_serializer(data=data)
         if not serializer.is_valid():
-            print("❌ ERREUR VALIDATION INSCRIPTION :", serializer.errors)
+            print(" ERREUR VALIDATION INSCRIPTION :", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
         serializer.is_valid(raise_exception=True) 
         user = serializer.save() 
@@ -59,7 +60,7 @@ class RegisterView(generics.CreateAPIView):
         VerificationEmail.objects.create(user=user, code=code_activation)
 
         # Affichage immédiat dans les logs pour le débogage
-        print(f"🔑 [DEBUG] CODE DE VÉRIFICATION POUR {user.email} -> {code_activation}")
+        print(f" [DEBUG] CODE DE VÉRIFICATION POUR {user.email} -> {code_activation}")
 
         # ON LANCE L'ENVOI DANS UN THREAD SÉPARÉ (Ne bloque pas le téléphone)
         email_thread = threading.Thread(
@@ -73,11 +74,12 @@ class RegisterView(generics.CreateAPIView):
         )
         email_thread.start()
 
-        # Le serveur répond instantanément au téléphone
-        return Response({
-            'message': 'Compte créé ! Veuillez vérifier vos logs ou votre boîte mail.',
-            'email': user.email
-        }, status=status.HTTP_201_CREATED)
+        response_data = serializer.data
+        # On y ajoute notre message personnalisé
+        response_data['message'] = 'Compte créé ! Veuillez vérifier vos logs ou votre boîte mail.'
+
+        # On renvoie le tout avec le statut 201 attendu par Flutter
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
