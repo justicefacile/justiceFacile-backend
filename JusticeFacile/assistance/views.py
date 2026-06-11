@@ -72,13 +72,20 @@ class RegisterView(generics.CreateAPIView):
                 [user.email]
             )
         )
+    
         email_thread.start()
 
-        response_data = serializer.data
-        # On y ajoute notre message personnalisé
-        response_data['message'] = 'Compte créé ! Veuillez vérifier vos logs ou votre boîte mail.'
+        response_data = serializer.data  # Format plat : {'id', 'username', 'email'}
+        
+        # On double les données sous forme imbriquée au cas où Flutter cherche 'user'
+        response_data['user'] = serializer.data 
+        
+        # On ajoute les messages et emails requis
+        response_data['message'] = 'Compte créé ! Veuillez vérifier vos logs.'
+        response_data['email'] = user.email
 
-        # On renvoie le tout avec le statut 201 attendu par Flutter
+        print(" [DEBUG] Réponse envoyée à Flutter :", response_data)
+
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 
